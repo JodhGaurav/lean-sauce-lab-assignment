@@ -89,6 +89,7 @@ root/
 ├── tsconfig.json                           # TypeScript configuration file
 └── .prettierrc                             # Prettier configuration file for code formatting rules
 ```
+---
 
 ## Prerequisites
 - Node.js (v14 or higher)
@@ -99,6 +100,7 @@ root/
         ```sh
         safaridriver --enable
         ```
+---
 
 ## Setup and Installation
 
@@ -119,6 +121,8 @@ root/
     npx wdio config
     ```
 4. #### Setup Environment: Ensure your WebDriverIO configuration (wdio.conf.ts) points to the Sauce Labs demo application.
+
+---
 
 ## How to Run the Tests
 
@@ -161,6 +165,7 @@ root/
         ```sh
         npm run cleanup
         ```
+---
 
 ## Framework Design
 - **Page Object Model (POM):** Each page is encapsulated in its own class, containing specific methods and locators for that page.
@@ -173,6 +178,7 @@ root/
     - **Logger:** Centralized logging with Allure step reporting, providing detailed logs for every test step.
     - **Wait:** Custom wait methods for dynamic elements and application-specific conditions.
 
+---
 
 ## Reporting
 The framework uses **Allure Reporting** to provide detailed insights into test execution:
@@ -193,6 +199,7 @@ The framework uses **Allure Reporting** to provide detailed insights into test e
     ```sh
     npm run report
     ```
+---
 
 ## Levels of Validations
 
@@ -209,6 +216,8 @@ The framework uses **Allure Reporting** to provide detailed insights into test e
     -   **Page Title:** Matches the expected title.
     -   **Layout Title:** Key elements are present and visually confirm the intended page.
 
+---
+
 ## Future Enhancements
 - Refactor this into a parameterized test so that a single test can run with different sets of test data. All test data should be stored within the **test-data** package.
 - Add negative test cases for:
@@ -220,6 +229,7 @@ The framework uses **Allure Reporting** to provide detailed insights into test e
     - GitHub Actions
 - Extend reporting features to include custom metrics and analytics.
 
+---
 
 ## Contributors
 - GauravJodh
