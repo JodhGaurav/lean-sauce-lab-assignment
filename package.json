@@ -5,9 +5,10 @@
   "scripts": {
     "prettier-format": "prettier --config .prettierrc '**/*.ts' --write",
     "cleanup": "npm run prettier-format",
-    "wdio_local": "npx wdio run ./src/config/wdio.conf.ts",
-    "wdio_local_safari": "browser=safari npx wdio run ./src/config/wdio.conf.ts",
-    "wdio_prod": "environment=prod npx wdio run ./src/config/wdio.conf.ts",
+    "wdio_prod": "npx wdio run ./src/config/wdio.conf.ts",
+    "wdio_prod_safari": "browser=safari npx wdio run ./src/config/wdio.conf.ts",
+    "wdio_local": "environment=dev npx wdio run ./src/config/wdio.conf.ts",
+    "wdio_local_safari": "environment=dev browser=safari npx wdio run ./src/config/wdio.conf.ts",
     "report": "allure generate ./reports/allure-results --clean -o ./reports/allure-report &&  allure open ./reports/allure-report",
     "smoke": "marker=@smoke npx wdio run ./src/config/wdio.conf.ts"
   },

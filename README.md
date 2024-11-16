@@ -134,25 +134,22 @@ root/
 2. #### Custom Commands / Scripts:
     The following scripts are available in the `package.json` file:
 
-    - **Run Tests on Local**: Runs tests using the local configuration.
-        ```sh
-        npm run wdio_local
-        ```
-    - **Run Tests on Local env and Safari**: Runs tests Safari browser using the local configuration.
-        ```sh
-        npm run wdio_local_safari
-        ```
-
     - **Run Tests on Production**: Runs tests using the production configuration.
         ```sh
         npm run wdio_prod
         ```
-
+    - **Run Tests on Production env and Safari**: Runs tests on Safari browser using the production configuration.
+        ```sh
+        npm run wdio_prod_safari
+        ```
+    - **Run Tests on Local**: Runs tests using the local configuration.
+        ```sh
+        npm run wdio_local
+        ```
     - **Generate Report**: Generates and opens an Allure report.
         ```sh
         npm run report
         ```
-
     - **Smoke Tests**: Runs smoke tests (future scope).
         ```sh
         npm run smoke

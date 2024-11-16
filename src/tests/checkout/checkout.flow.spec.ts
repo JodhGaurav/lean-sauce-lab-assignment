@@ -1,15 +1,16 @@
 import Login from '../../pages/global/login.po';
-import Header from '../../pages/global/header.po';
-import ProductListing from '../../pages/product/product.lisiting.po';
 import Cart from '../../pages/checkout/cart.po';
+import Header from '../../pages/global/header.po';
 import Checkout from '../../pages/checkout/checkout.info.po';
+import { CREDENTIALS as CREDS } from '../../constants/login.const';
+import ProductListing from '../../pages/product/product.lisiting.po';
 import CheckoutOverview from '../../pages/checkout/checkout.overview.po';
 import checkoutOverviewPo from '../../pages/checkout/checkout.overview.po';
 
 describe('Sauce Labs Checkout Flow', () => {
   beforeAll(async () => {
     await Login.open('/'); // Open the login page
-    await Login.login('standard_user', 'secret_sauce'); // Log in with standard user credentials
+    await Login.login(CREDS.standardUser.username, CREDS.standardUser.password); // Log in with standard user credentials
     await Login.validateNavigation(); // Validate successful navigation to the product listing page
   });
 

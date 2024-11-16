@@ -3,17 +3,17 @@ import AllureReporter from '@wdio/allure-reporter';
 import { Status } from 'allure-js-commons';
 
 export const MARKER = String(process.env.marker).split(',');
-export const environment = process.env.environment || 'uat';
+export const environment = process.env.environment || 'prod';
 export const browserParam = process.env.browser || 'chrome';
 
 let baseUrl;
 
 if (environment === 'uat') {
-  baseUrl = 'https://www.saucedemo.com';
+  baseUrl = 'https://www.saucedemo.com'; //can update url as per env
 } else if (environment === 'dev') {
-  baseUrl = 'https://www.saucedemo.com';
+  baseUrl = 'https://www.saucedemo.com'; //can update url as per env
 } else if (environment === 'prod') {
-  baseUrl = 'https://www.saucedemo.com';
+  baseUrl = 'https://www.saucedemo.com'; //can update url as per env
 }
 
 // Dynamically configure capabilities based on browser
