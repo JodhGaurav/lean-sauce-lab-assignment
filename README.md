@@ -134,7 +134,7 @@ root/
 2. #### Custom Commands / Scripts:
     The following scripts are available in the `package.json` file:
 
-    - **Run Tests on Production**: Runs tests using the production configuration.
+    - **Run Tests on Production**: Runs tests using the production configuration (run on chrome by default).
         ```sh
         npm run wdio_prod
         ```
