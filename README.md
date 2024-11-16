@@ -74,12 +74,15 @@ root/
 │   ├── test-data/                          # Test data for parameterized tests (future scope)
 │   │   └── sampleData.json                 # Sample test data for parameterized execution
 │   │
-│   ├── tests/                              # Test cases
-│   │   └── checkoutFlow.test.ts            # Tests for the checkout flow
+│   ├── tests/                              # Test cases (as per functionality/flow create directories under it)
+│   │   └── checkout/
+│   │       └── checkout.flow.spec.ts       # Tests for the checkout flow
 │   │
 │   └── utils/                              # Utility classes and helper methods
-│       ├── Logger.ts                       # Centralized logging with Allure integration for reporting
-│       └── Wait.ts                         # Custom utility methods for dynamic waits on elements
+│       ├── actions.util.ts                 # Contains reusable actions like clicking, typing, and scrolling
+│       ├── logger.util.ts                  # Centralized logging with Allure integration for reporting
+│       ├── soft.assertion.util.ts          # Utility for implementing soft assertions to log multiple failures without halting tests
+│       └── waits.util.ts                   # Custom utility methods for dynamic waits on elements
 │  
 ├── package.json                            # NPM configuration file containing project dependencies and scripts
 ├── tsconfig.json                           # TypeScript configuration file
@@ -118,7 +121,7 @@ root/
 
     - **Run Tests on Local**: Runs tests using the local configuration.
         ```sh
-        npm run wdio_localwdio_local_safari
+        npm run wdio_local
         ```
     - **Run Tests on Local env and Safari**: Runs tests Safari browser using the local configuration.
         ```sh
@@ -151,11 +154,13 @@ root/
 ## Framework Design
 - **Page Object Model (POM):** Each page is encapsulated in its own class, containing specific methods and locators for that page.
 - **Assertions:**
-    - Page navigation assertions (e.g., URL, page title).
-    - Cart validations (e.g., product count and names).
+    - Page navigation assertions (e.g., URL, page title, layout title).
+    - Cart validations (e.g., product count, names and order subtotal).
 - **Reusable Utilities:**
-    - **Logger:** Centralized logging with Allure step reporting.
-    - **Wait:** Custom wait methods for dynamic elements.
+    - **Actions:** Utility for common browser interactions like clicking, typing, and scrolling, ensuring reliable actions across different browsers.
+    - **Soft Assertions:** Allows multiple conditions to be validated without stopping the test execution on the first failure, logging all assertion failures for better debugging. Its a custom solution.
+    - **Logger:** Centralized logging with Allure step reporting, providing detailed logs for every test step.
+    - **Wait:** Custom wait methods for dynamic elements and application-specific conditions.
 
 
 ## Reporting
