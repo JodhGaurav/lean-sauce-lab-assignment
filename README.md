@@ -16,6 +16,7 @@ random items and completing the checkout flow.
 ## Table of Contents
 - [Features](#features)
 - [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
 - [Setup and Installation](#setup-and-installation)
 - [How to Run the Tests](#how-to-run-the-tests)
 - [Framework Design](#framework-design)
@@ -88,6 +89,16 @@ root/
 ├── tsconfig.json                           # TypeScript configuration file
 └── .prettierrc                             # Prettier configuration file for code formatting rules
 ```
+
+## Prerequisites
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+- **Browsers**:
+    - Chrome: Pre-installed on most systems and its driver comes bundled with WebDriverIO by default.
+    - Safari (macOS only): Need to enable SafariDriver:
+        ```sh
+        safaridriver --enable
+        ```
 
 ## Setup and Installation
 
