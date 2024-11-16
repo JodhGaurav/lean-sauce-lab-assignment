@@ -11,6 +11,7 @@ import { CK_COMPLETE_VALIDATION_POINTS } from '../../constants/checkout.const';
  */
 class CheckoutOverview extends BasePage {
   private cartItems = '.cart_item'; // Selector for each item in the cart
+  private totalPriceSelectorLabel = '.summary_subtotal_label';
   private continueButton = '#finish';
   private cancelButton = '#cancel';
   private successfullyCompletedOrder = '#checkout_complete_container';
@@ -32,37 +33,72 @@ class CheckoutOverview extends BasePage {
   async completeCheckout() {
     Logger.info('Placing final order');
     await this.actions.clickElement(this.continueButton);
+    await this.waits.waitForPageToLoad();
   }
 
   /**
    * Validates the details of the order against the expected product names.
    *
-   * @param expectedProductNames - An array of expected product names to be validated against the order content.
+   * @param expectedProduct - A Map of expected product names and their respective price to be validated against the order content.
    * @throws Will throw an error if the number of products in the order does not match the expected number.
    * @throws Will throw an error if any of the expected product names are not found in the order.
    *
    */
-  async validateOrderDetails(expectedProductNames: string[]) {
+  async validateOrderDetails(expectedProduct: Map<string, number>) {
     try {
       Logger.startStep('Checkout Overview/Order Details Validation: Started');
-      const products = await this.getCartProductNames();
+      const actualProducts = await this.getCartProductNames();
 
-      // Check if the cart contains exactly 3 products
-      if (products.length !== expectedProductNames.length) {
-        throw new Error(`Expected ${expectedProductNames.length} products in the final order page, but found ${products.length}`);
+      // Check if the cart contains exactly 'n' products
+      Logger.info('Validation #1: Total number of article in the order');
+      if (actualProducts.length !== expectedProduct.size) {
+        throw new Error(`Expected ${expectedProduct.size} products in the final order page, but found ${actualProducts.length}`);
       }
 
+      let expectedTotalPrice = 0;
       // Check if all product names in the cart match the expected product names
-      for (const name of expectedProductNames) {
-        if (!products.includes(name)) {
+      Logger.info('Validation #2: Expected products present in the order');
+      for (const [name, price] of expectedProduct) {
+        expectedTotalPrice += price;
+        if (!actualProducts.includes(name)) {
           throw new Error(`Product "${name}" was expected in the order but was not found.`);
         }
       }
+
+      // Assert the total price matches the sum of selected product prices before taxes (taxes not inculded in calulation)
+      Logger.info('Validation #3: Order subtotal (sum of cost of each product without taxes)');
+      await this.validateTotalPrice(expectedTotalPrice);
     } catch (error) {
       Logger.error(`Error occured while validating final order details: \n${error}`);
+      throw new Error(`Checkout Overview/Order Details Validation failed! \n${error}`);
     }
-    Logger.info('Order details validation successful: All products are correct.');
+    Logger.info('Order details validation successful: All products and total order price are correct.');
     Logger.endStep();
+  }
+
+  /**
+   * Retrieves the displayed total price from the checkout overview page.
+   *
+   * @returns {Promise<number>} A promise that resolves to the total price as a number.
+   */
+  private async getDisplayedTotalPrice(): Promise<number> {
+    const totalPriceText = await this.actions.getText(this.totalPriceSelectorLabel);
+    const totalPrice = parseFloat(totalPriceText.split('$')[1].trim()); // Extract and parse the price
+    return totalPrice;
+  }
+
+  /**
+   * Validates that the displayed total price matches the expected total price.
+   *
+   * @param expectedTotal - The expected total price to be validated against the displayed total price.
+   * @throws Will throw an error if the displayed total price does not match the expected total price.
+   */
+  private async validateTotalPrice(expectedTotal: number) {
+    const displayedTotal = await this.getDisplayedTotalPrice();
+    if (displayedTotal.toFixed(2) !== expectedTotal.toFixed(2)) {
+      throw new Error(`Total price mismatch! Expected: $${expectedTotal.toFixed(2)}, Displayed: $${displayedTotal.toFixed(2)}`);
+    }
+    console.log('Total price validation passed!');
   }
 
   /**
@@ -103,7 +139,7 @@ class CheckoutOverview extends BasePage {
    * @returns {Promise<string[]>} A promise that resolves to an array of product names in the cart.
    */
   private async getCartProductNames(): Promise<string[]> {
-    await this.waitForElementVisible(this.cartItems);
+    await this.waits.waitForElementVisible(this.cartItems);
 
     const cartItems = await $$(this.cartItems);
     const cartProductNames = [];

@@ -7,27 +7,41 @@ import CheckoutOverview from '../../pages/checkout/checkout.overview.po';
 import checkoutOverviewPo from '../../pages/checkout/checkout.overview.po';
 
 describe('Sauce Labs Checkout Flow', () => {
-  it('Should able complete the checkout process with 3 items', async () => {
-    await Login.open('/');
+  beforeAll(async () => {
+    await Login.open('/'); // Open the login page
+    await Login.login('standard_user', 'secret_sauce'); // Log in with standard user credentials
+    await Login.validateNavigation(); // Validate successful navigation to the product listing page
+  });
 
-    await Login.login('standard_user', 'secret_sauce');
-    await Login.validateNavigation();
-
+  it('Should able complete the checkout process with 3 random items', async () => {
+    // Select 3 random products from the product listing page
     const selectedProducts = await ProductListing.selectRandomProducts(3);
 
+    // Navigate to the cart page via cart icon and validating successful navigation
     await Header.goToCart();
     await Header.validateNavigation();
 
+    // Validate that the selected products are present in the cart
     await Cart.validateCartContent(selectedProducts);
+    // Proceed to the checkout information page and validating successful navigation
     await Cart.proceedToCheckout();
     await Cart.validateNavigation();
 
+    // Fill out checkout details (e.g., name, address)
     await Checkout.fillCheckoutDetails();
+    // Continue to the checkout overview page and validating successful navigation
     await Checkout.continueCheckout();
     await Checkout.validateNavigation();
 
+    // Validate order details like product name, number of article and order subtotal
     await CheckoutOverview.validateOrderDetails(selectedProducts);
+    // Complete the checkout process and validating successful navigation
     await CheckoutOverview.completeCheckout();
     await checkoutOverviewPo.validate();
+  });
+
+  afterEach(async () => {
+    // Navigate back to the product listing page for the next test
+    await Header.navigateBackToProductListing();
   });
 });

@@ -54,7 +54,8 @@ class Checkout extends BasePage {
   async continueCheckout() {
     Logger.startStep('Navigating to Checkout Overview Page');
     await this.actions.clickElement(this.continueButton);
-    await this.waitForElementVisible(this.finishButton);
+    await this.waits.waitForPageToLoad();
+    await this.waits.waitForElementVisible(this.finishButton);
     Logger.endStep();
   }
 

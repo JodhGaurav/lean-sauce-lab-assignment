@@ -1,4 +1,12 @@
 export default class Actions {
+  /**
+   * Scrolls the browser window to ensure the specified element is in view.
+   *
+   * @param {string} locator - The selector for the element to scroll to.
+   * @param {number} [compulsary=0] - If set to 1, forces the scroll even if the element is already in view.
+   *
+   * @returns {Promise<void>} A promise that resolves when the scrolling action is complete.
+   */
   async scrollToElement(locator: string, compulsary = 0) {
     try {
       await browser.setTimeout({ implicit: 0 });
@@ -24,13 +32,19 @@ export default class Actions {
     }
   }
 
-  async enterText(locator: string, inputText: string, timeout = 30) {
+  /**
+   * Enters the specified text into an input field located by the given locator.
+   *
+   * @param {string} locator - The selector used to locate the input element.
+   * @param {string} inputText - The text to be entered into the input field.
+   * @returns {Promise<void>} - A promise that resolves when the text has been entered.
+   */
+  async enterText(locator: string, inputText: string) {
     try {
       inputText = inputText.toString();
 
       const inputElement = await $(locator);
-      await inputElement.waitForExist({ timeout: timeout * 1000 });
-      await inputElement.waitForDisplayed({ timeout: timeout * 1000 });
+      await inputElement.waitForDisplayed();
       await inputElement.scrollIntoView();
       await inputElement.click();
       await inputElement.clearValue();
@@ -40,6 +54,12 @@ export default class Actions {
     }
   }
 
+  /**
+   * Clicks on an element specified by the locator.
+   *
+   * @param {string} locator - The selector used to locate the element.
+   * @returns {Promise<void>} A promise that resolves when the element is clicked.
+   */
   async clickElement(locator: string) {
     try {
       const buttonElement = await $(locator);
@@ -51,6 +71,12 @@ export default class Actions {
     }
   }
 
+  /**
+   * Retrieves the text content of an element specified by the locator.
+   *
+   * @param {string} locator - The selector used to locate the element.
+   * @returns {Promise<string>} A promise that resolves to the trimmed text content of the element.
+   */
   async getText(locator: string): Promise<string> {
     try {
       const element = await $(locator);

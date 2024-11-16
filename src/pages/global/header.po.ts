@@ -2,6 +2,7 @@ import BasePage from '../../pages/base.po';
 import Logger from '../../utils/logger.util';
 import { config } from '../../config/wdio.conf';
 import { CART_VALIDATION_POINTS } from '../../constants/cart.const';
+import { PRODUCT_VALIDATION_POINTS } from '../../constants/product.const';
 
 /**
  * Represents the header section of the page.
@@ -20,7 +21,8 @@ class Header extends BasePage {
   async goToCart() {
     Logger.info('Navigating to Cart Page');
     await this.actions.clickElement(this.cartLogo);
-    await this.waitForElementVisible(this.checkoutButton);
+    await this.waits.waitForPageToLoad();
+    await this.waits.waitForElementVisible(this.checkoutButton);
     Logger.info('On Cart Page');
   }
 
@@ -44,6 +46,16 @@ class Header extends BasePage {
     this.soft.expect(pageTitle).toEqual(CART_VALIDATION_POINTS.LAYOUT_TITLE);
     this.soft.assertAll();
     Logger.endStep();
+  }
+
+  /**
+   * Navigates back to the product listing page.
+   * @returns {Promise<void>} A promise that resolves when the navigation is complete.
+   */
+  async navigateBackToProductListing() {
+    Logger.info('Navigating back to product listing page');
+    browser.navigateTo(`${config.baseUrl}/${PRODUCT_VALIDATION_POINTS.URL}`);
+    await this.waits.waitForPageToLoad();
   }
 }
 

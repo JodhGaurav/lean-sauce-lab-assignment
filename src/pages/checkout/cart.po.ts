@@ -34,28 +34,33 @@ class Cart extends BasePage {
   async proceedToCheckout() {
     Logger.info('Proceeding to Checkout');
     await this.actions.clickElement(this.checkoutButton);
-    await this.waitForElementVisible(this.checkoutInfoForm);
+    await this.waits.waitForPageToLoad();
+    await this.waits.waitForElementVisible(this.checkoutInfoForm);
   }
 
   /**
    * Validates the content of the cart against the expected product names.
    *
-   * @param expectedProductNames - An array of expected product names to be validated against the cart content.
+   * @param expectedProduct - A Map of expected product names and their respective price to be validated against the cart content.
    * @throws Will throw an error if the number of products in the cart does not match the expected number.
    * @throws Will throw an error if any of the expected product names are not found in the cart.
    *
    */
-  async validateCartContent(expectedProductNames: string[]) {
+  async validateCartContent(expectedProduct: Map<string, number>) {
     try {
       Logger.startStep('Cart Validation: Started');
       const cartProductNames = await this.getCartProductNames();
 
-      // Check if the cart contains exactly 3 products
+      const expectedProductNames = Array.from(expectedProduct.keys());
+
+      // Check if the cart contains exactly 'n' products
+      Logger.info('Validation #1: Total number of article in the cart');
       if (cartProductNames.length !== expectedProductNames.length) {
         throw new Error(`Expected ${expectedProductNames.length} products in cart, but found ${cartProductNames.length}`);
       }
 
       // Check if all product names in the cart match the expected product names
+      Logger.info('Validation #2: Expected products present in the cart');
       for (const name of expectedProductNames) {
         if (!cartProductNames.includes(name)) {
           throw new Error(`Product "${name}" was expected in the cart but was not found.`);
@@ -63,6 +68,7 @@ class Cart extends BasePage {
       }
     } catch (error) {
       Logger.error(`Error occured while validating cart content: \n${error}`);
+      throw new Error(`Cart validation failed! \n${error}`);
     }
     Logger.info('Cart validation successful: All products are correct.');
     Logger.endStep();
@@ -77,7 +83,7 @@ class Cart extends BasePage {
    * @returns {Promise<string[]>} A promise that resolves to an array of product names in the cart.
    */
   private async getCartProductNames(): Promise<string[]> {
-    await this.waitForElementVisible(this.cartItems);
+    await this.waits.waitForElementVisible(this.cartItems);
 
     const cartItems = await $$(this.cartItems);
     const cartProductNames = [];

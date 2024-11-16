@@ -4,6 +4,7 @@ import { Status } from 'allure-js-commons';
 
 export const MARKER = String(process.env.marker).split(',');
 export const environment = process.env.environment || 'uat';
+export const browserParam = process.env.browser || 'chrome';
 
 let baseUrl;
 
@@ -15,20 +16,38 @@ if (environment === 'uat') {
   baseUrl = 'https://www.saucedemo.com';
 }
 
+// Dynamically configure capabilities based on browser
+const capabilities = [];
+if (browserParam === 'chrome') {
+  capabilities.push({
+    maxInstances: 1,
+    browserName: 'chrome',
+    'goog:chromeOptions': {
+      args: ['--start-maximized', '--allow-running-insecure-content', '--disable-web-security']
+    },
+    acceptInsecureCerts: true
+  });
+} else if (browserParam === 'firefox') {
+  capabilities.push({
+    maxInstances: 1,
+    browserName: 'firefox',
+    'moz:firefoxOptions': {
+      args: ['-width=1920', '-height=1080'] // Maximizes Firefox window
+    },
+    acceptInsecureCerts: true
+  });
+} else if (browserParam === 'safari') {
+  capabilities.push({
+    maxInstances: 1,
+    browserName: 'safari'
+  });
+}
+
 export const config: Options.Testrunner = {
   runner: 'local',
   specs: ['../tests/**/*.spec.ts'],
   maxInstances: 10,
-  capabilities: [
-    {
-      maxInstances: 1,
-      browserName: 'chrome',
-      'goog:chromeOptions': {
-        args: ['--start-maximized', '--allow-running-insecure-content', '--disable-web-security'] // This argument maximizes the window
-      },
-      acceptInsecureCerts: true
-    }
-  ],
+  capabilities: capabilities, // Use dynamically configured capabilities
   logLevel: 'info',
   bail: 0,
   baseUrl: baseUrl,

@@ -8,19 +8,20 @@ export class SoftAssertion {
     this.passed = [];
   }
 
-  expect1(condition: any) {
-    try {
-      expect(condition);
-    } catch (error) {
-      this.errors.push(error);
-    }
-    return this;
-  }
-
   expect(condition: any): SoftAssertMatcher {
     return new SoftAssertMatcher(condition, this.errors, this.passed);
   }
 
+  /**
+   * Asserts all collected soft assertions.
+   *
+   * This method checks the collected passed and failed assertions. If there are any passed assertions,
+   * it logs the number of passed assertions and their messages, and then clears the passed assertions.
+   * If there are any failed assertions, it collects their messages, clears the errors, and throws an error
+   * with the collected messages.
+   *
+   * @throws {Error} If there are any failed assertions, an error is thrown with the collected messages.
+   */
   assertAll() {
     //const passedMessages = this.passed.join('\n');
     //this.passed = []

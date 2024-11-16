@@ -27,7 +27,8 @@ class Login extends BasePage {
     await this.actions.enterText(this.usernameInput, username);
     await this.actions.enterText(this.passwordInput, password);
     await this.actions.clickElement(this.loginButton);
-    await this.waitForElementVisible(this.productSortDropdown);
+    await this.waits.waitForPageToLoad();
+    await this.waits.waitForElementVisible(this.productSortDropdown);
     Logger.endStep();
     Logger.info('On Product listing page');
   }
